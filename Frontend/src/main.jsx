@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router";
 import { TooltipProvider } from "@/components/ui/tooltip"
 import App from './App.jsx'
 import { Bounce, Flip, ToastContainer } from 'react-toastify';
-import { ThemeProvider } from './context/ThemeContext.jsx';
+import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from './context/LanguageContext.jsx';
 import { Provider } from 'react-redux';
 import { store } from './Redux/Store.js';

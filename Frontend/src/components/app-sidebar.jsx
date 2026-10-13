@@ -31,21 +31,21 @@ const data = {
     },
     {
       title: "Add Products",
-      url: "/dashboard/add-Product",
+      url: "/dashboard/addProduct",
       icon: (
         <ListIcon />
       ),
     },
     {
       title: "Products Detail",
-      url: "/dashboard/product-detail",
+      url: "/dashboard/Productdetail",
       icon: (
         <ListIcon />
       ),
     },
     {
       title: "Products",
-      url: "/dashboard/products",
+      url: "/dashboard/Productlist",
       icon: (
         <ChartBarIcon />
       ),

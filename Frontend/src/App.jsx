@@ -11,6 +11,9 @@ import Products from './page/Prouductlist'
 import Login from './page/login'
 import Signup from './page/Signup'
 import Form from './page/form'
+import Forget from './page/Forget'
+import Otp from './page/Otp'
+import Reset from './page/Reset'
 
 const App = () => {
    return ( 
@@ -24,16 +27,15 @@ const App = () => {
 <Route path={'Productdetail'} element={<ProductDetail/>}/>
 <Route path={'addProduct'} element={<AddProductPage/>}/>
 <Route path={'Productlist'} element={<Products/>}/>
-<Route path="/dashboard/login" element={<Login />} />
-<Route path="/dashboard/Signup" element={<Signup />} />
-
-
 
 <Route path={"productdetail/2/:id"} element={<ProductDetail />} />
 
-
 </Route>
-
+<Route path="/login" element={<Login />} />
+<Route path="/Signup" element={<Signup />} />
+<Route path={'/forget'} element={<Forget/>}/>
+<Route path={'/otp'} element={<Otp/>}/>
+<Route path={'/reset'} element={<Reset/>}/>
 
 </Routes>
     // <div className="flex min-h-svh flex-col items-center justify-center">

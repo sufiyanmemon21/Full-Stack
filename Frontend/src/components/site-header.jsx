@@ -1,25 +1,30 @@
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { useContext} from "react";
 import { ThemeContext } from "../context/ThemeContext";
-import { LanguageContext } from "../context/LanguageContext"; // Apne path ke mutabiq check karlein
-import { useContext, useState } from "react";
-import { Moon, Sun, Globe, ChevronDown } from "lucide-react"; 
+import { Sun, Moon, User, LogIn, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+export function SiteHeader  () {
+  const { Theme, toggleTheme} = useContext(ThemeContext);
+  const navigate = useNavigate();
 
-export function SiteHeader() {
-  const { Theme, toggleTheme } = useContext(ThemeContext);
-  const { language, changeLanguage } = useContext(LanguageContext);
-  
-  const [isOpen, setIsOpen] = useState(false);
+  // Check if user is logged in & get username
+  const isLoggedIn = localStorage.getItem("token") ? true : false; 
+  const userName = localStorage.getItem("userName") || "My Account";
 
-  const languages = [
-    { code: 'EN', name: 'English' },
-    { code: 'UR', name: 'اردو' },
-    { code: 'ES', name: 'Español' },
-  ];
-
-  const handleSelect = (langName) => {
-    changeLanguage(langName);
-    setIsOpen(false);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    navigate("/dashboard/login");
   };
 
   return (
@@ -29,56 +34,58 @@ export function SiteHeader() {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         <h1 className="text-base font-medium">Documents</h1>
-
-        {/* Right Section: Language Dropdown & Theme Toggle */}
-        <div className="ml-auto flex items-center gap-4">
+        
+        <div className="ml-auto flex items-center gap-3">
+          <span className="text-sm text-muted-foreground hidden sm:inline-block capitalize">
+            {Theme} mode
+          </span>
           
-          {/* Language Dropdown Container */}
-          <div className="relative">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors border border-input bg-background"
-              aria-label="Select language"
-            >
-              <Globe className="h-4 w-4" />
-              <span>{language}</span> {/* Selected language yahan show hogi */}
-              <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {/* Dropdown Menu List */}
-            {isOpen && (
-              <div className="absolute right-0 mt-2 w-36 bg-popover text-popover-foreground border rounded-md shadow-lg py-1 z-50">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => handleSelect(lang.name)}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors ${
-                      language === lang.name ? 'font-bold text-primary bg-accent/50' : ''
-                    }`}
-                  >
-                    {lang.name}
-                  </button>
-                ))}
-              </div>
+          {/* Theme Toggle Button */}
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={toggleTheme}
+            className="rounded-full w-9 h-9 border-zinc-300 dark:border-zinc-700 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-900 dark:text-zinc-100 transition-colors"
+          >
+            {Theme === "dark" ? (
+              <Moon className="h-4 w-4 transition-transform" />
+            ) : (
+              <Sun className="h-4 w-4 transition-transform" />
             )}
-          </div>
+            <span className="sr-only">Toggle theme</span>
+          </Button>
 
-          {/* Theme Toggle Section (Waisa hi jaisa pehle tha) */}
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-muted-foreground hidden sm:block">Current: {Theme}</p>
-            
-            <button 
-              onClick={toggleTheme}
-              className="inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors"
-              aria-label="Toggle theme"
-            >
-              {Theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-500" />
+          {/* Profile / User Menu Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full w-9 h-9 border-zinc-300 dark:border-zinc-700 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-900 dark:text-zinc-100 transition-colors"
+              >
+                <User className="h-4 w-4" />
+                <span className="sr-only">Open profile menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel className="truncate">
+                {isLoggedIn ? userName : "My Account"}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              
+              {isLoggedIn ? (
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 dark:text-red-400">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
               ) : (
-                <Moon className="h-5 w-5 text-slate-700" />
+                <DropdownMenuItem onClick={() => navigate("/login")} className="cursor-pointer">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  <span>Login</span>
+                </DropdownMenuItem>
               )}
-            </button>
-          </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
         </div>
       </div>
